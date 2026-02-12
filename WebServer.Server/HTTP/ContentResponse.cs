@@ -15,18 +15,16 @@ namespace WebServer.Server.HTTP
             Guard.AgainstNull(content);
             Guard.AgainstNull(contentType);
 
-            this.Headers.Add(Header.ContentType, contentType);
-            this.Body = content;
+            Headers.Add(Header.ContentType, contentType);
+            Body = content;
         }
 
         public override string ToString()
         {
-            if(this.Body != null)
-            {
-                var contentLength = Encoding.UTF8.GetByteCount(this.Body).ToString();
-                this.Headers.Add(Header.ContentLength, contentLength);
 
-            }
+            var contentLength = Encoding.UTF8.GetByteCount(Body);
+            Headers.Add(Header.ContentLength, contentLength.ToString());
+
             return base.ToString();
         }
     }

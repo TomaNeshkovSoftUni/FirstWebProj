@@ -24,9 +24,9 @@ namespace WebServer.Server
 
             this.ipAddress = IPAddress.Parse(ipAddress);
             this.port = port;
-            this.serverListener = new TcpListener(this.ipAddress, port);
+            serverListener = new TcpListener(this.ipAddress, port);
 
-            routingTableConfiguration(this.routingTable = new RoutingTable());
+            routingTableConfiguration(routingTable = new RoutingTable());
 
         }
 
@@ -42,7 +42,7 @@ namespace WebServer.Server
 
         public void Start()
         {
-            this.serverListener.Start();
+            serverListener.Start();
 
             Console.WriteLine($"Server started on port {port}");
             Console.WriteLine("Listening for requests ... ");
@@ -50,12 +50,12 @@ namespace WebServer.Server
             {
                 var connection = serverListener.AcceptTcpClient();
                 var networkStream = connection.GetStream();
-                var requestText = this.ReadRequest(networkStream);
+                var requestText = ReadRequest(networkStream);
                 Console.WriteLine(requestText);
                 var request = Request.Parse(requestText);
                 var response = routingTable.MatchRequest(request);
-                WriteResponse(networkStream, response);
-                connection.Close();
+                //WriteResponse(networkStream, "Hello from the server!");
+                //connection.Close();
             }
         }
         private void WriteResponse(NetworkStream networkStream, Response response)
