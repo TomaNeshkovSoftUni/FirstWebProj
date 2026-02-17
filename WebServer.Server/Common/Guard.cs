@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace WebServer.Server.Common
+namespace FirstWebServer.Server.Common
 {
     public static class Guard
     {

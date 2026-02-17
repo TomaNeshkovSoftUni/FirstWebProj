@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace WebServer.Server.HTTP
+namespace FirstWebServer.Server.HTTP
 {
     public class ContentType
     {

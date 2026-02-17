@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using WebServer.Server.HTTP_Request;
+using FirstWebServer.Server.HTTP_Request;
 
-namespace WebServer.Server.Responses
+namespace FirstWebServer.Server.Responses
 {
     public class BadRequestResponse : HTTP_Request.Response
     {

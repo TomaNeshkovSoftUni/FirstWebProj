@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
-using WebServer.Server.Common;
-using WebServer.Server.Contracts;
-using WebServer.Server.HTTP_Request;
-using WebServer.Server.Responses;
+using FirstWebServer.Server.Common;
+using FirstWebServer.Server.Contracts;
+using FirstWebServer.Server.HTTP_Request;
+using FirstWebServer.Server.Responses;
 
-namespace WebServer.Server.HTTP
+namespace FirstWebServer.Server.HTTP
 {
     public class RoutingTable : IRoutingTable
     {

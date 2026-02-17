@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 
-namespace WebServer.Server.HTTP_Request
+namespace FirstWebServer.Server.HTTP_Request
 {
     public class Response
     {

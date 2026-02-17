@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using WebServer.Server.HTTP;
+using FirstWebServer.Server.HTTP;
 
-namespace WebServer.Server.Responses
+namespace FirstWebServer.Server.Responses
 {
     public class TextResponse : ContentResponse
     {

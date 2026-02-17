@@ -5,11 +5,11 @@ using System.IO.Pipes;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using WebServer.Server.Contracts;
-using WebServer.Server.HTTP;
-using WebServer.Server.HTTP_Request;
+using FirstWebServer.Server.Contracts;
+using FirstWebServer.Server.HTTP;
+using FirstWebServer.Server.HTTP_Request;
 
-namespace WebServer.Server
+namespace FirstWebServer.Server
 {
     public class HttpServer
     {

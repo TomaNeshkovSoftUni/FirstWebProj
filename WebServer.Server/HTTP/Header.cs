@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using WebServer.Server.Common;
+using FirstWebServer.Server.Common;
 
-namespace WebServer.Server.HTTP_Request
+namespace FirstWebServer.Server.HTTP_Request
 {
     public class Header
     {

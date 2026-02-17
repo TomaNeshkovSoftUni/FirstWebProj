@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using WebServer.Server.HTTP;
+using FirstWebServer.Server.HTTP;
 
-namespace WebServer.Server.Responses
+namespace FirstWebServer.Server.Responses
 {
     public class HtmlResponse : ContentResponse
     {

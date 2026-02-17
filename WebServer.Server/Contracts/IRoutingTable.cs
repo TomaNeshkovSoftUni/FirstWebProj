@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using WebServer.Server.HTTP_Request;
+using FirstWebServer.Server.HTTP_Request;
 
-namespace WebServer.Server.Contracts
+namespace FirstWebServer.Server.Contracts
 {
     public interface IRoutingTable
     {

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-namespace WebServer.Server.HTTP_Request
+namespace FirstWebServer.Server.HTTP_Request
 {
     public class HeaderCollection : IEnumerable<Header>
     {
@@ -16,8 +16,11 @@ namespace WebServer.Server.HTTP_Request
         public int Count => this.headers.Count;
         public void Add(string name, string value)
         {
-            var headers = new Header(name, value);
-            this.headers.Add(name, headers);
+            if (!this.headers.ContainsKey(name))
+            {
+                var headers = new Header(name, value);
+                this.headers.Add(name, headers);
+            }
         }
 
         public IEnumerator<Header> GetEnumerator()
