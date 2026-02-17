@@ -13,14 +13,30 @@ namespace FirstWebServer.Server.HTTP_Request
             headers = new Dictionary<string, Header>();
         }
 
+        public string this[string name]
+        {
+            get
+            {
+                return headers[name].Value;
+            }
+            set
+            {
+                headers[name].Value = value;
+            }
+        }
+
         public int Count => this.headers.Count;
+
+        public bool Contains(string name)
+        {
+            return this.headers.ContainsKey(name);
+        }
+
         public void Add(string name, string value)
         {
-            if (!this.headers.ContainsKey(name))
-            {
-                var headers = new Header(name, value);
-                this.headers.Add(name, headers);
-            }
+
+            var headers = new Header(name, value);
+            this.headers[name] = headers;
         }
 
         public IEnumerator<Header> GetEnumerator()

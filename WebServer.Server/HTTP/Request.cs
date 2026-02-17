@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Mime;
 using System.Text;
+using System.Web;
+using FirstWebServer.Server.HTTP;
 
 namespace FirstWebServer.Server.HTTP_Request
 {
@@ -10,6 +13,9 @@ namespace FirstWebServer.Server.HTTP_Request
         public string? Url { get; private set; }
         public HeaderCollection? Headers { get; private set; }
         public string? Body { get; private set; }
+
+        public IReadOnlyDictionary<string, string> FromData { get; private set; } = new Dictionary<string, string>();
+
         public static Request Parse(string request)
         {
             var lines = request.Split("\r\n");
@@ -24,12 +30,15 @@ namespace FirstWebServer.Server.HTTP_Request
             var bodyLines = lines.Skip(headers.Count + 2).ToArray();
             var body = string.Join("\r\n", bodyLines);
 
+            var form = ParseForm(headers, body);
+
             return new Request
             {
                 Method = method,
                 Url = url,
                 Headers = headers,
-                Body = body
+                Body = body,
+                FromData = form
             };
         }
         private static Method ParseMethod(string method)
@@ -48,12 +57,12 @@ namespace FirstWebServer.Server.HTTP_Request
             var headers = new HeaderCollection();
             foreach (var headerLine in headerLines)
             {
-                if(headerLine == string.Empty)
+                if (headerLine == string.Empty)
                 {
                     break;
                 }
                 var headerParts = headerLine.Split(":", 2);
-                if(headerParts.Length != 2)
+                if (headerParts.Length != 2)
                 {
                     throw new InvalidOperationException("Request is not valid.");
 
@@ -65,6 +74,45 @@ namespace FirstWebServer.Server.HTTP_Request
                 headers.Add(headerName, headerValue);
             }
             return headers;
+        }
+
+        private static Dictionary<string, string> ParseForm(HeaderCollection headers, string body)
+        {
+            var formCollection = new Dictionary<string, string>();
+
+            if (headers.Contains(Header.ContentType)
+                && headers[Header.ContentType] == ContentType.FormUrlEncoded)
+            {
+                var parsedForm = ParseFormData(body);
+
+                foreach (var (name, value) in parsedForm)
+                {
+                    formCollection.Add(name, value);
+                }
+            }
+
+            return formCollection;
+        }
+        private static Dictionary<string, string> ParseFormData(string bodyLines)
+        {
+            var formData = new Dictionary<string, string>();
+
+            var pairs = bodyLines.Split('&');
+
+            foreach (var pair in pairs)
+            {
+                var parts = pair.Split('=');
+
+                if (parts.Length == 2)
+                {
+                    var name = HttpUtility.UrlDecode(parts[0]);
+                    var value = HttpUtility.UrlDecode(parts[1]);
+
+                    formData[name] = value;
+                }
+            }
+
+            return formData;
         }
     }
 }
