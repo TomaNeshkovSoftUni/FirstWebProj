@@ -34,14 +34,13 @@ namespace WebServer.Server.HTTP
                 default:
                     throw new InvalidOperationException($"Method '{method}' is not supported.");
             }
-
         }
 
         public IRoutingTable MapGet(string url, Response response)
         {
             Guard.AgainstNull( url , nameof(url) );
             Guard.AgainstNull(response, nameof(response));
-            this.routes[Method.Post][url] = response;
+            this.routes[Method.Get][url] = response;
 
             return this;
         }

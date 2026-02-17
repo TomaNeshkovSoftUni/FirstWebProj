@@ -54,8 +54,8 @@ namespace WebServer.Server
                 Console.WriteLine(requestText);
                 var request = Request.Parse(requestText);
                 var response = routingTable.MatchRequest(request);
-                //WriteResponse(networkStream, "Hello from the server!");
-                //connection.Close();
+                WriteResponse(networkStream, response);
+                connection.Close();
             }
         }
         private void WriteResponse(NetworkStream networkStream, Response response)
