@@ -16,7 +16,6 @@ namespace FirstWebServer.Server
         private readonly IPAddress ipAddress;
         private readonly int port;
         private readonly TcpListener serverListener;
-
         private readonly RoutingTable routingTable;
 
         public HttpServer(string ipAddress, int port, Action<IRoutingTable> routingTableConfiguration)
@@ -24,13 +23,13 @@ namespace FirstWebServer.Server
 
             this.ipAddress = IPAddress.Parse(ipAddress);
             this.port = port;
-            serverListener = new TcpListener(this.ipAddress, port);
+            this.serverListener = new TcpListener(this.ipAddress, port);
 
-            routingTableConfiguration(routingTable = new RoutingTable());
+            routingTableConfiguration(this.routingTable = new RoutingTable());
 
         }
 
-        public HttpServer(int port , Action<IRoutingTable> routes)
+        public HttpServer(int port, Action<IRoutingTable> routes)
             : this("127.0.0.1", port, routes)
         {
         }
@@ -40,38 +39,53 @@ namespace FirstWebServer.Server
         {
         }
 
-        public void Start()
+        public async Task Start()
         {
-            serverListener.Start();
+            this.serverListener.Start();
 
             Console.WriteLine($"Server started on port {port}");
             Console.WriteLine("Listening for requests ... ");
             while (true)
             {
-                var connection = serverListener.AcceptTcpClient();
-                var networkStream = connection.GetStream();
-                var requestText = ReadRequest(networkStream);
-                Console.WriteLine(requestText);
-                var request = Request.Parse(requestText);
-                var response = routingTable.MatchRequest(request);
-                WriteResponse(networkStream, response);
-                connection.Close();
+                var connection = await serverListener.AcceptTcpClientAsync();
+
+                _ = Task.Run(async () =>
+                {
+                    var networkStream = connection.GetStream();
+                    var requestText = await ReadRequest(networkStream);
+                    Console.WriteLine(requestText);
+                    var request = Request.Parse(requestText);
+                    var response = routingTable.MatchRequest(request);
+                    if (response.PreRenderAction != null)
+                    {
+                        response.PreRenderAction(request, response);
+                    }
+                    await WriteResponse(networkStream, response);
+                    connection.Close();
+                });
+
             }
         }
-        private void WriteResponse(NetworkStream networkStream, Response response)
+        private async Task WriteResponse(NetworkStream networkStream, Response response)
         {
             var responseBytes = Encoding.UTF8.GetBytes(response.ToString());
-            networkStream.Write(responseBytes);
+            await networkStream.WriteAsync(responseBytes);
         }
 
-        private string ReadRequest(NetworkStream networkStream)
+        private async Task<string> ReadRequest(NetworkStream networkStream)
         {
-            var bufferLength = 1024;
-            var buffer = new byte[bufferLength];
+            var bufferLingth = 1024;
+            var buffer = new byte[bufferLingth];
+            var totalBayts = 0;
             var requestBuilder = new StringBuilder();
             do
             {
-                var bytesRead = networkStream.Read(buffer, 0, bufferLength);
+                var bytesRead = await networkStream.ReadAsync(buffer, 0, bufferLingth);
+                totalBayts += bytesRead;
+                if (totalBayts > 10 * 1024)
+                {
+                    throw new InvalidDataException("Request is to lorge.");
+                }
                 requestBuilder.Append(Encoding.UTF8.GetString(buffer, 0, bytesRead));
             }
             while (networkStream.DataAvailable);

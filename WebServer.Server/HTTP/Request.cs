@@ -10,9 +10,9 @@ namespace FirstWebServer.Server.HTTP_Request
     public class Request
     {
         public Method Method { get; private set; }
-        public string? Url { get; private set; }
-        public HeaderCollection? Headers { get; private set; }
-        public string? Body { get; private set; }
+        public string Url { get; private set; }
+        public HeaderCollection Headers { get; private set; }
+        public string Body { get; private set; }
 
         public IReadOnlyDictionary<string, string> FromData { get; private set; } = new Dictionary<string, string>();
 
@@ -81,7 +81,7 @@ namespace FirstWebServer.Server.HTTP_Request
             var formCollection = new Dictionary<string, string>();
 
             if (headers.Contains(Header.ContentType)
-                && headers[Header.ContentType] == ContentType.FormUrlEncoded)
+                && headers[Header.ContentType] == HTTP.ContentType.FormUrlEncoded)
             {
                 var parsedForm = ParseFormData(body);
 

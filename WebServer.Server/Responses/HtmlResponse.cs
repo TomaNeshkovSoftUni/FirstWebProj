@@ -1,14 +1,16 @@
-﻿using System;
+﻿using FirstWebServer.Server.HTTP;
+using FirstWebServer.Server.HTTP_Request;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using FirstWebServer.Server.HTTP;
 
 namespace FirstWebServer.Server.Responses
 {
     public class HtmlResponse : ContentResponse
     {
-        public HtmlResponse(string HTML) 
-            : base(HTML, ContentType.Html)
+        public HtmlResponse(string html,
+            Action<Request, Response> preRenderAction = null)
+            : base(html, ContentType.Html, preRenderAction)
         {
         }
     }
