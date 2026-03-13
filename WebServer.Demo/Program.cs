@@ -11,8 +11,8 @@ namespace FirstWebServer.Demo
 {
     public class StartUp
     {
-        private const string Username = "user";
-        private const string Password = "user123";
+        private const string Username = "Toma Neshkov";
+        private const string Password = "Alabala";
 
         public static async Task Main()
         {
