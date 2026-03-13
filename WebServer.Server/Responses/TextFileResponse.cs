@@ -11,7 +11,7 @@ namespace FirstWebServer.Server.Responses
         public TextFileResponse(string fileName) : base(StatusCode.OK)
         {
             FileName = fileName;
-            this.Headers.Add(Header.ContentType, HTTP.ContentType.PlainText);
+            Headers.Add(Header.ContentType, HTTP.ContentType.PlainText);
         }
 
         public override string ToString()
@@ -20,8 +20,8 @@ namespace FirstWebServer.Server.Responses
             {
                 Body = File.ReadAllText(FileName);
                 var fileBytesCount = new FileInfo(FileName).Length;
-                this.Headers.Add(Header.ContentLength, fileBytesCount.ToString());
-                this.Headers.Add(Header.ContentDisposition, $"attachment: filename=\"{this.FileName}\"");
+                Headers.Add(Header.ContentLength, fileBytesCount.ToString());
+                Headers.Add(Header.ContentDisposition, $"attachment; filename=\"{this.FileName}\"");
             }
             return base.ToString();
         }

@@ -9,11 +9,13 @@ namespace FirstWebServer.Server.HTTP_Request
 {
     public class Request
     {
+        private static Dictionary<string, Session> Sessions = new();
         public Method Method { get; private set; }
         public string Url { get; private set; }
         public HeaderCollection Headers { get; private set; }
+        public CookieCollection Cookies { get; private set; }
         public string Body { get; private set; }
-
+        public Session Session { get; private set; }
         public IReadOnlyDictionary<string, string> FromData { get; private set; } = new Dictionary<string, string>();
 
         public static Request Parse(string request)
@@ -27,6 +29,9 @@ namespace FirstWebServer.Server.HTTP_Request
 
             var headers = ParseHeaders(lines.Skip(1));
 
+            var cookies = ParseCookies(headers);
+            var session = GetSession(cookies);
+
             var bodyLines = lines.Skip(headers.Count + 2).ToArray();
             var body = string.Join("\r\n", bodyLines);
 
@@ -37,10 +42,26 @@ namespace FirstWebServer.Server.HTTP_Request
                 Method = method,
                 Url = url,
                 Headers = headers,
+                Cookies = cookies,
                 Body = body,
+                Session = session,
                 FromData = form
             };
         }
+
+        private static Session GetSession(CookieCollection cookies)
+        {
+            var sessionId = cookies.Contains(Session.SessionCookieName)
+                ? cookies[Session.SessionCookieName]
+                : Guid.NewGuid().ToString();
+
+            if (!Sessions.ContainsKey(sessionId))
+            {
+                Sessions[sessionId] = new Session(sessionId);
+            }
+            return Sessions[sessionId];
+        }
+
         private static Method ParseMethod(string method)
         {
             try
@@ -49,7 +70,7 @@ namespace FirstWebServer.Server.HTTP_Request
             }
             catch (Exception)
             {
-                throw new InvalidOperationException($"Method '{method}' is not supported");
+                throw new InvalidOperationException($"Method '{method}' is not supportrd");
             }
         }
         private static HeaderCollection ParseHeaders(IEnumerable<string> headerLines)
@@ -114,5 +135,29 @@ namespace FirstWebServer.Server.HTTP_Request
 
             return formData;
         }
+
+        private static CookieCollection ParseCookies(HeaderCollection headers)
+        {
+            var cookies = new CookieCollection();
+            if (headers.Contains(Header.Cookie))
+            {
+                var cookieHeader = headers[Header.Cookie];
+
+                var allCookies = cookieHeader.Split(';');
+
+                foreach (var cookie in allCookies)
+                {
+                    var cookieParts = cookie.Split("=");
+
+                    var cookieName = cookieParts[0].Trim();
+                    var cookieValue = cookieParts[1].Trim();
+
+                    cookies.Add(cookieName, cookieValue);
+                }
+            }
+            return cookies;
+        }
+
     }
 }
+

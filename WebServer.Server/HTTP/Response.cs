@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
+using FirstWebServer.Server.HTTP;
 
 namespace FirstWebServer.Server.HTTP_Request
 {
@@ -9,6 +10,7 @@ namespace FirstWebServer.Server.HTTP_Request
     {
         public StatusCode StatusCode { get; init; }
         public HeaderCollection Headers { get; } = new HeaderCollection();
+        public CookieCollection Cookies { get; } = new CookieCollection();
         public string Body { get; set; }
         public Action<Request, Response> PreRenderAction { get; protected set; }
         public Response(StatusCode statusCode)
@@ -25,6 +27,10 @@ namespace FirstWebServer.Server.HTTP_Request
             foreach (var header in this.Headers)
             {
                 result.AppendLine(header.ToString());
+            }
+            foreach (var cookie in Cookies)
+            {
+                result.AppendLine($"{Header.SetCookie}: {cookie}");
             }
             result.AppendLine();
             if (!string.IsNullOrWhiteSpace(this.Body))

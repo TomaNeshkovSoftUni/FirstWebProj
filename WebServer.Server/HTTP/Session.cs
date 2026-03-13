@@ -24,8 +24,8 @@ namespace FirstWebServer.Server.HTTP
         {
             Guard.AgainstNull(id, nameof(id));
 
-            this.Id = id;
-            this.data = new Dictionary<string, string>();
+            Id = id;
+            data = new Dictionary<string, string>();
         }
 
         public bool ContainsKey(string key)
