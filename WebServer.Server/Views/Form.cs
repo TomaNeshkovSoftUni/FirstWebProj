@@ -12,7 +12,7 @@ namespace FirstWebServer.Server.Views
     {
         public static class Form
         {
-            public const string HTML = @"<form action='/login' method='POST'>
+            public const string HTML = @"<form action='/Login' method='POST'>
             Name: <input type='text' name='Name'/>
             Age: <input type='number' name='Age'/>
             <input type='submit' value='Save' />

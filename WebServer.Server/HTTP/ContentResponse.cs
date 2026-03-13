@@ -27,7 +27,6 @@ namespace FirstWebServer.Server.HTTP
             {
                 var contentLength = Encoding.UTF8.GetByteCount(this.Body).ToString();
                 this.Headers.Add(Header.ContentLength, contentLength);
-
             }
             return base.ToString();
         }

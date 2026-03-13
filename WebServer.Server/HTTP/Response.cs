@@ -24,16 +24,20 @@ namespace FirstWebServer.Server.HTTP_Request
         {
             var result = new StringBuilder();
             result.AppendLine($"HTTP/1.1 {(int)this.StatusCode} {this.StatusCode}");
+
             foreach (var header in this.Headers)
             {
                 result.AppendLine(header.ToString());
             }
+
             foreach (var cookie in Cookies)
             {
                 result.AppendLine($"{Header.SetCookie}: {cookie}");
             }
+
             result.AppendLine();
-            if (!string.IsNullOrWhiteSpace(this.Body))
+
+            if (this.Body != null)
             {
                 result.Append(this.Body);
             }
